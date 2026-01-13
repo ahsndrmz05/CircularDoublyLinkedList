@@ -1,0 +1,112 @@
+//Circular Doubly Linked List Implementation in Java
+
+//a. Generic Node<T> class
+class Node<T> {
+ T data;
+ Node<T> next;
+ Node<T> prev;
+
+ // Constructor with parameter T data
+ public Node(T data) {
+     this.data = data;
+     this.next = null;
+     this.prev = null;
+ }
+}
+
+//b. Generic CDoublyLinkedList<T> class
+public class CDoublyLinkedList<T> {
+ private Node<T> header;
+
+ // Empty constructor: header node initialized
+ public CDoublyLinkedList() {
+     header = new Node<T>(null);
+     header.next = header;
+     header.prev = header;
+ }
+
+ // c. Append a node at the end of CDLL
+ public void append(T data) {
+     Node<T> newNode = new Node<>(data);
+     Node<T> last = header.prev;
+
+     newNode.next = header;     // new node points to header
+     newNode.prev = last;       // new node's prev points to last node
+     last.next = newNode;       // last node's next points to new node
+     header.prev = newNode;     // header's prev now points to new node
+ }
+
+ // d. Delete the node with the given data
+ public void delete(T data) {
+     Node<T> current = header.next;
+
+     // Traverse until back to header
+     while (current != header) {
+         if (current.data.equals(data)) {
+             current.prev.next = current.next;
+             current.next.prev = current.prev;
+             return; // delete only first occurrence
+         }
+         current = current.next;
+     }
+ }
+
+ // e. Display all nodes in the CDLL
+ public void display() {
+     System.out.print("header");
+     Node<T> current = header.next;
+
+     while (current != header) {
+         System.out.print(" <-> " + current.data);
+         current = current.next;
+     }
+
+     System.out.println(" <-> header");
+ }
+
+
+//f & g. Main class to test both String and Integer CDLL
+
+ public static void main(String[] args) {
+
+     // String CDLL
+     CDoublyLinkedList<String> StrCDLL = new CDoublyLinkedList<>();
+     StrCDLL.append("hello");
+     StrCDLL.append("from");
+     StrCDLL.append("the earth");
+     StrCDLL.display();
+
+     StrCDLL.delete("from");
+     StrCDLL.display();
+
+     // Integer CDLL
+     CDoublyLinkedList<Integer> IntCDLL = new CDoublyLinkedList<>();
+     IntCDLL.append(4);
+     IntCDLL.append(8);
+     IntCDLL.append(15);
+     IntCDLL.append(16);
+     IntCDLL.display();
+
+     IntCDLL.delete(8);
+     IntCDLL.display();
+ }
+}
+
+
+/*
+h. Time Complexity Analysis:
+
+1. append(T data):
+- Worst case: O(1)
+- Explanation: The header node maintains a reference to the last node (via header.prev),
+  so insertion at the end is a constant-time operation.
+
+2. delete(T data):
+- Worst case: O(n)
+- Explanation: We may need to traverse the entire list to find the node with the given value.
+
+3. display():
+- Worst case: O(n)
+- Explanation: We must traverse all n nodes to print them once.
+
+*/
